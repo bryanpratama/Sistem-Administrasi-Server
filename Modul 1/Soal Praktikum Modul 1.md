@@ -53,7 +53,7 @@ Masuk ke container
 ```
 sudo lxc-attach -n ubuntu_landing
 ```
-Kemudian merubah IP sesuai skema ip address menjadi 10.0.3.103
+Kemudian merubah IP sesua skema ip address menjadi 10.0.3.103
 ```
 nano /etc/network/interfaces
 ```
@@ -80,7 +80,7 @@ Masuk ke container
 ```
 sudo lxc-attach -n ubuntu_php7.4
 ```
-Kemudian merubah IP sesuai skema ip address menjadi 10.0.3.101
+Kemudian merubah IP sesua skema ip address menjadi 10.0.3.101
 ```
 nano /etc/netplan/10-lxc.yaml
 ```
@@ -95,216 +95,136 @@ sudo netplan apply
 
 #### 2. Install LXC debian 9 dengan nama debian_php5.6
 
-Jalankan
-```
-sudo lxc-create -n ubuntu_php5.6 -t download -- --dist debian --release stretch --arch amd64 --force-cache --no-validate --server images.linuxcontainers.org
-```
-Command ini digunakan untuk menginstall LXC dengan nama debian_5.6
+membuat debian_php5.6
 
 ![add debian_php5.6](Assets/membuat-debian-5.6.png)
 
-Kemudian cek apakah debian_php5.6 sudah ter-install, dengan command
-```
-sudo lxc-ls -f
-```
-Sehingga akan terlihat tampilan seperti gambar dibawah ini, yang artinya sudah berhasil ter-install 
+mengecek debian_php5.6
+
 ![create debian_php5.6 done](Assets/debian5.6-berhasil-dibuat.png)
 
 #### 3. Setup nginx pada dabian_php5.6
-Start container dari debian_php5.6
-```
-sudo lxc-start -n debian_php5.6
-```
-Masuk ke container
-```
-sudo lxc-attach -n debian_php5.6
-```
-Kemudian install nginx dan nginx extras
-```
-sudo apt install nginx nginx-extras
-```
+
 start debian_php5.6 dan install nginx
 
 ![start debian + install nginx](Assets/run-debian5.6-dan-install-nginx.png)
 
-Kemudian install nano, net-tools, dan curl
-```
-apt install nano net-tools curl
-```
+install nano, net-tools, dan curl
+
 ![install nano net tools dan curl](Assets/install-net-tools-curl-di-debian.png)
 
-Kemudian merubah IP sesuai skema ip address menjadi 10.0.3.102
-```
-nano /etc/network/interfaces
-```
+setting ip jadi 102
 
 ![change ip to 102](Assets/ubah-isi-dari-network-interface-debian.png)
 
-Untuk melihat perubahan silahkan melakukan restart
-```
-restart
-```
+melakukan restart 
+
 ![restart network service](Assets/mengecek-perubahan-ip-debian-dengan-menggunakan-ifconfig.png)
 
-jika ip tetap tidak berubah silakam melakukan reboot
-```
-reboot
-```
+jika ip tidak berubah silakam melakukan reboot
 
 ![reboot to change ip to 102](Assets/ip-debian-berhasil-di-ubah-menjadi-10.0.3.102%20.png)
 
 setting nginx
-```
-cd /etc/nginx/sites-available
-```
-Membuat file baru dengan nama lxc_php5.6.dev
-```
-touch lxc_php5.6.dev
-```
-```
-nano lxc_php5.6.dev
-```
+
 ![setting nginx](Assets/add-lxc_php5.6-ke-debian.png)
 
-Masuk ke lxc_php5.6.dev dan lakukan konfigurasi seperti dibawah
+mengiisi lxc_php5.6
 
 ![add server name + index](Assets/mengisi-lxc_php5.6.png)
 
-Kemudian masuk ke sites-enabled
-```
-cd ../sites-enabled
-ln -s /etc/nginx/sites-available/lxc_landing.dev .
-```
-Gunakan ```nginx -t``` untuk melakukan koreksi dan ```nginx -s reload ```untuk melakukan reload
-```
-nginx -t
-nginx -s reload
-```
+butuh pembaruan
+
 ![](Assets/copy-lxc5.6-ke-enabled.png)
 
-Lalu masuk ke hosts untuk menambahkan ```lxc_php5.6.dev```
-```
-nano /etc/hosts
-```
 ![add lxc_php5.6 to hosts](Assets/update-hosts-debian5.6.png)
 
 ![copy index to lxc_php5_6 index](Assets/cp-index-to-lxc-debian.png)
 
-Masuk ke direktori html
-```
-cd /var/www/html
-cp index.nginx-debian.html lxc_php5.6/index.html
-nano lxc_php5.6/index.html
-```
-![isi dari index.html dari debian ](Assets/isi-lxc-debian.png)
+![test curl ](Assets/isi-lxc-debian.png)
 
 #### 4. Setup nginx pada ubuntu_landing
-Masuk ke ubuntu landing dengan command
 
-
+Masuk ke ubuntu landing, kemudian masuk ke file lxc landing.dev, dengan command
+```
+nano lxc_lending.dev
+```
+setelah itu ketik seperti yang tertera pada gambar
 ![change server name to lxc_landing](Assets/merubah-alamat-jadi-lxc_landing-index.png)
 
 ![add lxc_ladning to sites enabled](Assets/mebuat-lxc_landing-di-sites-enable-ubuntu-landing.png)
 
+Setelah itu tambahkan LXC landing pada hosts
 ![add lxc_landing to hosts](Assets/menambahkan-lxc_landing-di-host-fix.png)
 
 ![masuk ke lxc_lading index](Assets/masuk-ke-index-pada-lxc-landing.png)
 
+Kemudian masuk ke halaman index.html untuk memasukkan pesan seperti pada gambar dibawah
 ![melihat isi lxc_landing index](Assets/melihat-isi-dari-lxc-landing-index.png)
-
-melakukan test dengan curl ke lxc_landing.dev
 
 ![](Assets/)
 
 #### 5. Auto start pada LXC ubuntu_landing
 
-Sebelum melakukan auto start, hentikan terlebih dahulu ubuntu landing
-```
-sudo lxc-stop -n ubuntu_landing
-```
+sebelum melakukan auto start stop terlebih dahulu ubuntu landing
+
 ![stop ubuntu landing](Assets/stop-ubuntu-landing.png)
 
-Masuk ke ubuntu landing 
-```
-sudo su
-cd /var/lib/lxc
-cd ubuntu_landing
-```
+masuk ke ubuntu landing config
+
 ![masuk ke ubuntu landing config](Assets/masuk-ke-ubuntul-landing-config.png)
 
-Kemudian masuk ke config
-```
-nano config
-```
 ![nano config](Assets/masuk-e-config-ubuntul-landing2.png)
 
-menambahkan config  ```lxc.start.auto = 1```
-```
-lxc.start.auto = 1
-```
+menambahkan config dengan lxc.start.auto = 1
+
 ![add auto start](Assets/menambahkan-auto-start-pada-ubuntu-landing.png)
 
-Jika sudah silahkan lakukan ```reboot```
-```
-lxc-ls -f
-```
-maka ubuntu landing akan otomatis menyala dan autostart = 1
+maka auto start = 1
+
 ![reboot for check auto start = 1](Assets/ubuntu-landing-auto.png)
 
 #### 6. Setup nginx pada vm.local mengatur proxy_pass
 
-masuk ke hosts vm.local
-
+masuk ke hosts vm.local dengan comand 
+```
+sudo nano /etc/hosts
+```
+sehinngga akan muncul seperti gambar dibawah
 ![change to 101 102 103](Assets/merubah-hosts-ke-101-102-103.png)
 
-masuk ke vm.local
+SEtelah itu, masuk ke direktori sites-available, lalu masuk ke vm.local
 
 ![nano vm local](Assets/masuk-ke-vm.local.png)
 
-
+sehingga akan masuk ke file vm.local, lalu ketik seperti yang tertera pada gambar
 
 ![merubah isi vm local](Assets/update-index-vm-local.png)
 
 #### 7. Tampilan pada browser
-Test curl melalui kontainer masing-masing
 
-LXC ubuntu server 18.04 ```ubuntu_php7.4```
+curl didalam
+
 ![ip 101](Assets/curl-in-7.4.png)
 
-LXC debian server 9 ```debian_php5.6 ```
 ![ip 102](Assets/curl-in-debian5.6.png)
 
-LXC ubuntu server 16.04 ```ubuntu_landing```
 ![ip 103](Assets/curl-in-landing.png)
 
-Melakukan curl di home
+curl dari home
 
-LXC ubuntu server 18.04 ```ubuntu_php7.4```
 ![home curl 101](Assets/curl-home-in-7.4.png)
 
-LXC debian server 9 ```debian_php5.6 ```
 ![home curl 102](Assets/curl-home-in-debian5.6.png)
 
-LXC ubuntu server 16.04 ```ubuntu_landing```
 ![home curl 103](Assets/curl-home-in-landing.png)
 
-Cek lewat browser
+dari browser
 
-```
-vm.local/blog
-```
 ![browser 101](Assets/tampilan-lxc_7.4-browser.png)
 
-
-```
-vm.local/app
-```
 ![browser 102](Assets/tampilan-debian_5.6-browser.png)
 
-
-```
-vm.local/
-```
 ![browser 103](Assets/tampilan-lxc_landing-browser.png)
 
 #### 8. Analisis Praktikum
